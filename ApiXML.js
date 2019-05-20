@@ -1,20 +1,24 @@
 import React, { Component } from 'react';
 
 import {
-    StyleSheet,
     ActivityIndicator,
     FlatList,
     Text,
     View,
     Alert,
     RefreshControl,
-    Dimensions
+    StatusBar,
+    Image
 } from 'react-native';
+
+import styles from '../src/css/Styles'
+
 import xmlParse from 'xml2json-light';
+import { Container, Header, Left, Body, Right, Footer, FooterTab, Button } from 'native-base';
+import Icon from 'react-native-vector-icons/Ionicons';
+import logo from '../assets/logo.png'
 
-const { width: WIDTH } = Dimensions.get('window')
-
-export default class Project extends Component {
+export default class API extends Component {
     constructor(props) {
         super(props);
         this.state = { refreshing: true };
@@ -73,63 +77,70 @@ export default class Project extends Component {
             );
         }
         return (
-            <View style={styles.MainContainer}>
-                <FlatList
-                    data={this.state.dataSource}
-                    ItemSeparatorComponent={this.ListViewItemSeparator}
-                    enableEmptySections={true}
-                    renderItem={({ item }) => (
-                        <View>
-                            <Text style={styles.rowViewContainer}
-                                onPress={() => alert(item.COMMON)}>
-                                {item.COMMON}
-                            </Text>
-                            <Text style={styles.rowViewContainer}
-                                onPress={() => alert(item.BOTANICAL)}>
-                                {item.BOTANICAL}
-                            </Text>
-                            <Text style={styles.rowViewContainer}
-                                onPress={() => alert(item.PRICE)}>
-                                {item.PRICE}
-                            </Text>
-                            <Text style={styles.bodyContainer}
-                                onPress={() => alert(item.AVAILABILITY)}>
-                                {item.AVAILABILITY}
-                            </Text>
-                        </View>
-                    )}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={this.state.refreshing}
-                            onRefresh={this.onRefresh.bind(this)}
-                        />
-                    }
-                    keyExtractor={(item, index) => index.toString()}
-                />
-            </View>
+            <Container style={{ backgroundColor: 'rgba(110, 207, 246, 0.2)' }}>
+                <View style={styles.BlogContent}>
+                    <StatusBar
+                        barStyle="light-content"
+                        backgroundColor="#00A1E4"
+                    />
+                    <FlatList
+                        data={this.state.dataSource}
+                        enableEmptySections={true}
+                        renderItem={({ item }) => (
+                            <View style={styles.Contents}>
+                                <View>
+                                    <Text style={styles.BlogTitle}>
+                                        {item.COMMON}
+                                    </Text>
+                                </View>
+                                <Text style={styles.rowViewContainer}
+                                    onPress={() => alert(item.BOTANICAL)}>
+                                    <Text style={styles.Price}>Название:</Text>  {item.BOTANICAL}
+                                </Text>
+                                <Text style={styles.rowViewContainer}
+                                    onPress={() => alert(item.BOTANICAL)}>
+                                    <Text style={styles.Price}>Описание:</Text>  {item.BOTANICAL}
+                                </Text>
+                                <Text style={styles.rowViewContainer}
+                                    onPress={() => alert(item.PRICE)}>
+                                    <Text style={styles.Price}>Цена:</Text>  {item.PRICE}
+                                </Text>
+                            </View>
+                        )}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.state.refreshing}
+                                onRefresh={this.onRefresh.bind(this)}
+                            />
+                        }
+                        keyExtractor={(item, index) => index.toString()}
+                    />
+                </View>
+                <Footer>
+                    <FooterTab style={{ backgroundColor: '#0066B3' }}>
+                        <Button vertical style={styles.Calling}>
+                            <Icon name={'md-call'} size={20} color={'#ffffff'} />
+                            <Text style={{ color: '#ffffff' }}>Связаться</Text>
+                        </Button>
+                        <Button vertical style={styles.Blog} onPress={() => this.props.navigation.navigate('Блог')}>
+                            <Icon name={'md-book'} size={20} color={'#ffffff'} />
+                            <Text style={{ color: '#ffffff' }}>Новости</Text>
+                        </Button>
+                        <Button vertical style={styles.Active} onPress={() => this.props.navigation.navigate('Кабинет')}>
+                            <Icon name={'md-person'} size={20} color={'#ffffff'} />
+                            <Text style={{ color: '#ffffff' }}>Кабинет</Text>
+                        </Button>
+                        <Button vertical style={styles.FAQ}>
+                            <Icon name={'md-help-buoy'} size={20} color={'#ffffff'} />
+                            <Text style={{ color: '#ffffff' }}>Помощь</Text>
+                        </Button>
+                        <Button vertical style={styles.Buy} onPress={() => this.props.navigation.navigate('Услуги')}>
+                            <Icon name={'md-card'} size={20} color={'#ffffff'} />
+                            <Text style={{ color: '#ffffff' }}>Купить</Text>
+                        </Button>
+                    </FooterTab>
+                </Footer>
+            </Container>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    MainContainer: {
-        justifyContent: 'center',
-        flex: 1,
-        marginTop: 10,
-        paddingHorizontal: 20,
-    },
-    rowViewContainer: {
-        fontSize: 18,
-        padding: 10,
-        color: '#000000'
-    },
-    bodyContainer: {
-        width: WIDTH - 50,
-        height: null,
-        borderRadius: 0,
-        backgroundColor: '#dddddd',
-        fontSize: 18,
-        padding: 15,
-        color: '#000000'
-    }
-});
